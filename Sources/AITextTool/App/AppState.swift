@@ -39,6 +39,7 @@ final class AppState {
     // MARK: - Conversation
 
     var conversationHistory: [AIMessage] = []
+    var currentSession: ConversationSession?
 
     // MARK: - Init
 
