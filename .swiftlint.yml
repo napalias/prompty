@@ -1,0 +1,57 @@
+included:
+  - Sources/AITextTool
+excluded:
+  - Sources/AITextTool/Sidecar
+  - Tests/AITextToolTests/Mocks
+
+opt_in_rules:
+  - force_unwrapping
+  - force_try
+  - implicitly_unwrapped_optional
+  - discouraged_optional_boolean
+  - empty_count
+  - first_where
+  - sorted_imports
+  - closure_spacing
+  - operator_usage_whitespace
+
+file_length:
+  warning: 200
+  error: 250
+  ignore_comment_only_lines: true
+
+function_body_length:
+  warning: 35
+  error: 40
+
+type_body_length:
+  warning: 200
+  error: 300
+
+line_length:
+  warning: 120
+  error: 150
+  ignores_urls: true
+  ignores_comments: true
+
+cyclomatic_complexity:
+  warning: 8
+  error: 12
+
+nesting:
+  type_level:
+    warning: 2
+
+identifier_name:
+  min_length: 2
+  excluded:
+    - id
+    - x
+    - "y"
+
+custom_rules:
+  no_print:
+    name: "No print statements"
+    regex: '^\s*print\('
+    message: "Use Logger.swift instead of print(). See 04_ARCHITECTURE.md"
+    severity: error
