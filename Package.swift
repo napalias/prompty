@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AITextTool",
+    name: "Prompty",
     platforms: [
         .macOS(.v15)
     ],
@@ -20,21 +20,21 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "AITextTool",
+            name: "Prompty",
             dependencies: [
                 "KeyboardShortcuts",
                 "Sparkle"
             ],
-            path: "Sources/AITextTool",
+            path: "Sources/Prompty",
             exclude: ["Sidecar"],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
             ]
         ),
         .testTarget(
-            name: "AITextToolTests",
-            dependencies: ["AITextTool"],
-            path: "Tests/AITextToolTests"
+            name: "PromptyTests",
+            dependencies: ["Prompty"],
+            path: "Tests/PromptyTests"
         )
     ]
 )

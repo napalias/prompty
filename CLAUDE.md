@@ -1,8 +1,8 @@
-# CLAUDE.md — AITextTool (prompty)
+# CLAUDE.md — Prompty (prompty)
 
 ## Project Overview
 
-AITextTool is a macOS menu bar app that captures selected text system-wide via a global hotkey, sends it to an AI provider with a chosen prompt, streams the result in a floating panel, and lets the user replace the original text, copy, diff, or continue chatting.
+Prompty is a macOS menu bar app that captures selected text system-wide via a global hotkey, sends it to an AI provider with a chosen prompt, streams the result in a floating panel, and lets the user replace the original text, copy, diff, or continue chatting.
 
 **Status:** Pre-implementation. The `docs/` folder contains the complete specification (21 files). No application code exists yet.
 
@@ -58,10 +58,10 @@ All specification lives in `docs/`. Read `docs/00_INDEX.md` for the full index. 
 
 ```bash
 # Build
-xcodebuild build -scheme AITextTool -destination 'platform=macOS'
+xcodebuild build -scheme Prompty -destination 'platform=macOS'
 
 # Test
-xcodebuild test -scheme AITextTool -destination 'platform=macOS'
+xcodebuild test -scheme Prompty -destination 'platform=macOS'
 
 # Lint
 swiftlint lint --strict
