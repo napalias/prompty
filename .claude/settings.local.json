@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "mcp__playwright__*",
+      "mcp__fetch__*",
+      "mcp__sequentialthinking__*",
+      "mcp__context7__*",
+      "mcp__plugin_context7_context7__*"
+    ]
+  },
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-server-playwright@latest"]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-server-fetch@latest"]
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-server-sequential-thinking@latest"]
+    }
+  }
+}
