@@ -47,10 +47,10 @@ struct AppSettings: Codable, Equatable, Sendable {
 // MARK: - HotkeySetting
 
 /// Persisted hotkey configuration.
-/// Default: Option+Space (keyCode 49 = Space, modifiers = maskAlternate).
+/// Default: Option+C (keyCode 8 = C, modifiers = maskAlternate).
 struct HotkeySetting: Codable, Equatable, Sendable {
-    /// CGKeyCode for the hotkey. 49 = Space bar.
-    var keyCode: UInt16 = 49
+    /// CGKeyCode for the hotkey. 8 = C key.
+    var keyCode: UInt16 = 8
     /// CGEventFlags raw value. 524288 = maskAlternate (Option key).
     var modifiers: UInt64 = 524_288
 }
