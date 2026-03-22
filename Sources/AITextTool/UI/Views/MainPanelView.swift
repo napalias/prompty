@@ -3,8 +3,8 @@
 //
 // Root SwiftUI view inside the floating panel.
 // Routes to sub-views based on AppState.panelMode (21K definitive enum).
-// Handles keyboard events for result actions:
-//   Enter -> replace, Cmd+Enter -> copy, D -> diff, E -> edit, Escape -> dismiss.
+// Handles keyboard events for result actions.
+// Uses .regularMaterial for system appearance adaptation (20T).
 
 import SwiftUI
 
@@ -23,6 +23,10 @@ struct MainPanelView: View {
         }
         .frame(width: PanelSizeConstraints.width)
         .fixedSize(horizontal: false, vertical: true)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Strings.Accessibility.panelLabel)
     }
 
     // MARK: - Content Router
@@ -54,7 +58,6 @@ struct MainPanelView: View {
         case .noProviderConfigured:
             noProviderView
         case .promptEditor:
-            // Prompt editor is handled by a separate task
             Text(Strings.Panel.thinking)
         }
     }
@@ -100,11 +103,7 @@ struct MainPanelView: View {
         let pasteMode = state.selectedPrompt?.pasteMode ?? .plain
         Task { @MainActor in
             do {
-                try await service.replace(
-                    with: text,
-                    in: nil,
-                    pasteMode: pasteMode
-                )
+                try await service.replace(with: text, in: nil, pasteMode: pasteMode)
             } catch {
                 service.copyToClipboard(text)
             }
@@ -136,11 +135,7 @@ struct MainPanelView: View {
         let pasteMode = state.selectedPrompt?.pasteMode ?? .plain
         Task { @MainActor in
             do {
-                try await service.replace(
-                    with: text,
-                    in: nil,
-                    pasteMode: pasteMode
-                )
+                try await service.replace(with: text, in: nil, pasteMode: pasteMode)
             } catch {
                 service.copyToClipboard(text)
             }

@@ -63,6 +63,33 @@ enum Strings {
         static let baseURLPlaceholder = "https://api.openai.com/v1"
         static let hotkeyDefault = "Option+Space"
         static let noLogsMessage = "No log files yet"
+        static let general = "General"
+        static let providers = "Providers"
+        static let prompts = "Prompts"
+        static let logs = "Logs"
+        static let launchAtLogin = "Launch at Login"
+        static let launchAtLoginDescription = "Automatically start AITextTool when you log in."
+        static let launchAtLoginError = "Could not update login item"
+        static let panelAppearance = "Panel Appearance"
+        static let appearanceAuto = "Auto"
+        static let appearanceLight = "Light"
+        static let appearanceDark = "Dark"
+        static let hotkey = "Hotkey"
+    }
+
+    enum PromptPicker {
+        static let searchPlaceholder = "Search prompts..."
+        static let recentlyUsed = "Recently Used"
+        static let allPrompts = "All Prompts"
+        static let noResults = "No prompts match your search"
+        static let noResultsDetail = "Try a different search term."
+    }
+
+    enum Accessibility {
+        static let panelLabel = "AITextTool Panel"
+        static let searchField = "Search prompts"
+        static let clearSearch = "Clear search"
+        static let promptList = "Prompt list"
     }
 
     enum Diff {

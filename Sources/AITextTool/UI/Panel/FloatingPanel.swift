@@ -4,6 +4,7 @@
 // NSPanel subclass: borderless, non-activating, floating level,
 // transparent background, rounded corners. Appears above fullscreen apps.
 // canBecomeKey returns true so SwiftUI keyboard events work (21D).
+// collectionBehavior set per 19P for fullscreen and Space support.
 
 import AppKit
 
@@ -16,7 +17,7 @@ final class FloatingPanel: NSPanel {
 
     // MARK: - Init
 
-    init(contentRect: NSRect) {
+    init(contentRect: NSRect = NSRect(x: 0, y: 0, width: 480, height: 420)) {
         super.init(
             contentRect: contentRect,
             styleMask: [.nonactivatingPanel, .borderless, .fullSizeContentView],
@@ -32,9 +33,6 @@ final class FloatingPanel: NSPanel {
         isFloatingPanel = true
         isMovableByWindowBackground = true
         level = .floating
-        // 19P: fullScreenAuxiliary for Z-order above fullscreen apps,
-        // canJoinAllSpaces so the panel is available on every Space,
-        // moveToActiveSpace so it follows Space transitions.
         collectionBehavior = [
             .canJoinAllSpaces,
             .fullScreenAuxiliary,
