@@ -1,5 +1,7 @@
 // MockAIProvider.swift
 // AITextToolTests
+//
+// Mock AI provider for testing. Returns stubbed tokens or errors.
 
 @testable import AITextTool
 
@@ -9,17 +11,30 @@ final class MockAIProvider: AIProviderProtocol, @unchecked Sendable {
     var mockIsConfigured = true
     var isConfigured: Bool { mockIsConfigured }
 
+    /// Tokens to yield when stream() is called.
     var stubbedTokens: [String] = ["Hello", " world"]
+    /// If set, stream() throws this error instead.
     var stubbedError: Error?
+    /// Captures the last request for assertion.
+    var lastReceivedRequest: AIRequest?
+    /// Count of stream() calls.
+    var streamCallCount = 0
 
-    func stream(request: AIRequest) -> AsyncThrowingStream<String, Error> {
-        AsyncThrowingStream { continuation in
+    func stream(
+        request: AIRequest
+    ) -> AsyncThrowingStream<String, Error> {
+        lastReceivedRequest = request
+        streamCallCount += 1
+        let tokens = stubbedTokens
+        let error = stubbedError
+
+        return AsyncThrowingStream { continuation in
             Task {
-                if let error = self.stubbedError {
+                if let error {
                     continuation.finish(throwing: error)
                     return
                 }
-                for token in self.stubbedTokens {
+                for token in tokens {
                     continuation.yield(token)
                 }
                 continuation.finish()
