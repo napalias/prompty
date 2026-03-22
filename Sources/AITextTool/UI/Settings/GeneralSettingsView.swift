@@ -1,12 +1,20 @@
 // GeneralSettingsView.swift
 // AITextTool
 //
-// Launch at Login (SMAppService), appearance picker.
+// Hotkey recorder (KeyboardShortcuts), Launch at Login (SMAppService),
+// appearance picker, auto-copy toggle, result display override.
 // SMAppService is used directly per spec (H5) -- no external package.
 
+import KeyboardShortcuts
 import ServiceManagement
 import SwiftUI
 import os
+
+// MARK: - KeyboardShortcuts.Name extension
+
+extension KeyboardShortcuts.Name {
+    static let triggerAI = Self("triggerAI")
+}
 
 // MARK: - GeneralSettingsView
 
@@ -16,14 +24,31 @@ struct GeneralSettingsView: View {
     @State private var launchAtLogin: Bool = false
     @State private var launchAtLoginError: String?
     @State private var appearance: PanelAppearance = .auto
+    @State private var autoCopyOnDismiss: Bool = true
+    @State private var renderModeOverride: ResultRenderMode?
 
     var body: some View {
         Form {
+            hotkeySection
             loginSection
             appearanceSection
+            autoCopySection
+            renderModeSection
         }
         .formStyle(.grouped)
         .onAppear { loadSettings() }
+    }
+
+    // MARK: - Hotkey
+
+    private var hotkeySection: some View {
+        Section(Strings.Settings.hotkey) {
+            KeyboardShortcuts.Recorder(
+                Strings.Settings.hotkey,
+                name: .triggerAI
+            )
+            .accessibilityLabel(Strings.Settings.hotkey)
+        }
     }
 
     // MARK: - Launch at Login
@@ -47,7 +72,6 @@ struct GeneralSettingsView: View {
                 Text(errorMessage)
                     .font(.caption)
                     .foregroundStyle(.red)
-                    .accessibilityLabel(errorMessage)
             }
         }
     }
@@ -75,12 +99,57 @@ struct GeneralSettingsView: View {
         }
     }
 
+    // MARK: - Auto-copy
+
+    private var autoCopySection: some View {
+        Section {
+            Toggle(isOn: $autoCopyOnDismiss) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(Strings.Settings.autoCopyOnDismiss)
+                    Text(Strings.Settings.autoCopyOnDismissDescription)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityLabel(Strings.Settings.autoCopyOnDismiss)
+            .onChange(of: autoCopyOnDismiss) { _, newValue in
+                settingsRepo.update { $0.autoCopyOnDismiss = newValue }
+            }
+        }
+    }
+
+    // MARK: - Render Mode Override
+
+    private var renderModeSection: some View {
+        Section(Strings.Settings.resultDisplay) {
+            Picker(
+                Strings.Settings.resultDisplay,
+                selection: $renderModeOverride
+            ) {
+                Text(Strings.Settings.usePerPromptSetting)
+                    .tag(ResultRenderMode?.none)
+                Text(Strings.Settings.alwaysPlainText)
+                    .tag(ResultRenderMode?.some(.plain))
+                Text(Strings.Settings.alwaysMarkdown)
+                    .tag(ResultRenderMode?.some(.markdown))
+            }
+            .pickerStyle(.radioGroup)
+            .onChange(of: renderModeOverride) { _, newValue in
+                settingsRepo.update {
+                    $0.resultRenderModeOverride = newValue
+                }
+            }
+        }
+    }
+
     // MARK: - Private
 
     private func loadSettings() {
         let current = settingsRepo.settings
         launchAtLogin = current.launchAtLogin
         appearance = current.panelAppearance
+        autoCopyOnDismiss = current.autoCopyOnDismiss
+        renderModeOverride = current.resultRenderModeOverride
     }
 
     private func updateLaunchAtLogin(enabled: Bool) {
@@ -104,4 +173,22 @@ struct GeneralSettingsView: View {
             )
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    GeneralSettingsView(settingsRepo: PreviewGeneralSettingsRepo())
+        .frame(width: 480)
+}
+
+private final class PreviewGeneralSettingsRepo: SettingsRepositoryProtocol,
+    @unchecked Sendable
+{
+    private var current = AppSettings()
+    var settings: AppSettings { current }
+    func update(_ transform: (inout AppSettings) -> Void) {
+        transform(&current)
+    }
+    func reset() { current = AppSettings() }
 }

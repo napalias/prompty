@@ -18,8 +18,8 @@ enum Strings {
         static let customPrompt = "Custom Prompt"
         static let send = "Send"
         static let back = "Back"
-        static let noProviderDetail = "Add an API key or connect Claude in Settings to start using AITextTool."
-        static let customPromptInputLabel = "Custom prompt input"
+        static let noProviderDetail = "Configure an AI provider in Settings to get started."
+        static let customPromptInputLabel = "Enter your prompt"
     }
 
     enum ActionBar {
@@ -31,14 +31,6 @@ enum Strings {
         static let accept = "Accept"
         static let reject = "Reject"
         static let continuePrompting = "Continue"
-    }
-
-    enum ContinueChat {
-        static let followUpPlaceholder = "Ask a follow-up..."
-        static let send = "Send"
-        static let startOver = "Start Over"
-        static let you = "You"
-        static let assistant = "Assistant"
     }
 
     enum Errors {
@@ -56,6 +48,49 @@ enum Strings {
         static let accessibilityPermissionDenied = "Accessibility permission required"
         static let inputMonitoringPermissionDenied = "Input Monitoring permission required"
         static let textCaptureTimeout = "Text capture timed out"
+        static let streamInterrupted = "Stream interrupted"
+        static let retry = "Retry"
+        static let openSystemSettings = "Open System Settings"
+        static let openSettings = "Open Settings"
+        static let checkApiKey = "Check API Key"
+        static let copyCommand = "Copy Command"
+    }
+
+    enum PromptPicker {
+        static let searchPlaceholder = "Search prompts..."
+        static let recentlyUsed = "Recently Used"
+        static let allPrompts = "All Prompts"
+        static let noResults = "No prompts found"
+        static let noResultsDetail = "Try a different search term"
+    }
+
+    enum ContinueChat {
+        static let followUpPlaceholder = "Ask a follow-up..."
+        static let send = "Send"
+        static let startOver = "Start Over"
+        static let you = "You"
+        static let assistant = "Assistant"
+    }
+
+    enum Diff {
+        static let original = "Original"
+        static let revised = "Revised"
+        static let accept = "Accept"
+        static let reject = "Reject"
+        static let edit = "Edit"
+    }
+
+    enum EditBeforeReplace {
+        static let title = "Edit Before Replacing"
+        static let confirm = "Replace"
+        static let cancel = "Cancel"
+    }
+
+    enum Accessibility {
+        static let panelLabel = "AITextTool floating panel"
+        static let searchField = "Search prompts"
+        static let clearSearch = "Clear search"
+        static let promptList = "Prompt list"
     }
 
     enum Settings {
@@ -66,7 +101,7 @@ enum Strings {
         static let general = "General"
         static let providers = "Providers"
         static let prompts = "Prompts"
-        static let logs = "Logs"
+        static let hotkey = "Hotkey"
         static let launchAtLogin = "Launch at Login"
         static let launchAtLoginDescription = "Automatically start AITextTool when you log in."
         static let launchAtLoginError = "Could not update login item"
@@ -74,31 +109,40 @@ enum Strings {
         static let appearanceAuto = "Auto"
         static let appearanceLight = "Light"
         static let appearanceDark = "Dark"
-        static let hotkey = "Hotkey"
-    }
-
-    enum PromptPicker {
-        static let searchPlaceholder = "Search prompts..."
-        static let recentlyUsed = "Recently Used"
-        static let allPrompts = "All Prompts"
-        static let noResults = "No prompts match your search"
-        static let noResultsDetail = "Try a different search term."
-    }
-
-    enum Accessibility {
-        static let panelLabel = "AITextTool Panel"
-        static let searchField = "Search prompts"
-        static let clearSearch = "Clear search"
-        static let promptList = "Prompt list"
-    }
-
-    enum Diff {
-        static let original = "Original"
-        static let revised = "Revised"
-    }
-
-    enum EditBeforeReplace {
-        static let title = "Edit before replacing"
+        static let autoCopyOnDismiss = "Auto-copy on dismiss"
+        static let autoCopyOnDismissDescription = "Copy AI result to clipboard when panel is dismissed with Escape."
+        static let resultDisplay = "Result Display"
+        static let usePerPromptSetting = "Use per-prompt setting"
+        static let alwaysPlainText = "Always plain text"
+        static let alwaysMarkdown = "Always markdown"
+        static let anthropicApiKey = "Anthropic API Key"
+        static let openaiApiKey = "OpenAI API Key"
+        static let ollamaBaseURL = "Ollama URL"
+        static let ollamaBaseURLDefault = "http://localhost:11434"
+        static let model = "Model"
+        static let testConnection = "Test Connection"
+        static let connectionSuccess = "Connected successfully"
+        static let connectionFailed = "Connection failed"
+        static let testing = "Testing..."
+        static let customBaseURL = "Base URL"
+        static let quickFill = "Quick-fill:"
+        static let addPrompt = "New Prompt"
+        static let editPrompt = "Edit"
+        static let deletePrompt = "Delete"
+        static let restorePrompt = "Restore"
+        static let importPrompts = "Import JSON"
+        static let exportPrompts = "Export JSON"
+        static let myPrompts = "My Prompts"
+        static let builtInPrompts = "Built-in"
+        static let hiddenPrompts = "Hidden"
+        static let confirmDelete = "Delete this prompt?"
+        static let confirmDeleteMessage = "This action cannot be undone."
+        static let title = "Title"
+        static let icon = "Icon"
+        static let template = "Template"
+        static let resultMode = "After response"
+        static let renderMode = "Display mode"
+        static let pasteMode = "Paste format"
     }
 
     enum MenuBar {
