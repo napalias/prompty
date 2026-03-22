@@ -1,16 +1,26 @@
 // MockSettingsRepository.swift
 // AITextToolTests
+//
+// In-memory mock for SettingsRepositoryProtocol. Tracks calls for assertions.
 
 @testable import AITextTool
 
-final class MockSettingsRepository: SettingsRepositoryProtocol {
-    var savedSettings: AppSettings?
+final class MockSettingsRepository: SettingsRepositoryProtocol, @unchecked Sendable {
+    private var storedSettings: AppSettings = AppSettings()
+    var updateCallCount = 0
+    var resetCallCount = 0
 
-    func load() -> AppSettings {
-        savedSettings ?? AppSettings()
+    var settings: AppSettings {
+        storedSettings
     }
 
-    func save(_ settings: AppSettings) throws {
-        savedSettings = settings
+    func update(_ transform: (inout AppSettings) -> Void) {
+        updateCallCount += 1
+        transform(&storedSettings)
+    }
+
+    func reset() {
+        resetCallCount += 1
+        storedSettings = AppSettings()
     }
 }
