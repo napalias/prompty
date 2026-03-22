@@ -40,6 +40,7 @@ final class AppState {
 
     var conversationHistory: [AIMessage] = []
     var currentSession: ConversationSession?
+    var followUpInput: String = ""
 
     // MARK: - Init
 
@@ -59,6 +60,24 @@ final class AppState {
         isStreaming = false
     }
 
+    /// Appends a message to the conversation history for multi-turn chat.
+    func appendToConversation(message: AIMessage) {
+        conversationHistory.append(message)
+    }
+
+    /// Clears conversation history and returns panel to promptPicker mode.
+    func startOver() {
+        conversationHistory = []
+        streamingTokens = ""
+        isStreaming = false
+        isWaitingForFirstToken = false
+        streamingError = nil
+        streamingTask = nil
+        lastResponseTokens = nil
+        followUpInput = ""
+        panelMode = .promptPicker
+    }
+
     func reset(capturedText newText: String) {
         capturedText = newText
         capturedTextWasTruncated = false
@@ -75,6 +94,7 @@ final class AppState {
         panelModeSessionRenderOverride = nil
         selectedPrompt = nil
         customPromptInput = ""
+        followUpInput = ""
 
         conversationHistory = []
     }

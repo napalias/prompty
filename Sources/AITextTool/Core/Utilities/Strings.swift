@@ -26,6 +26,14 @@ enum Strings {
         static let continuePrompting = "Continue"
     }
 
+    enum ContinueChat {
+        static let followUpPlaceholder = "Ask a follow-up..."
+        static let send = "Send"
+        static let startOver = "Start Over"
+        static let you = "You"
+        static let assistant = "Assistant"
+    }
+
     enum Errors {
         static let noTextSelectedMessage = "No text selected"
         static let noTextSelectedDetail = "Select some text in any app, then press the hotkey."
