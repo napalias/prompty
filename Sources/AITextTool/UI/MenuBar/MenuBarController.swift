@@ -6,6 +6,7 @@
 
 import AppKit
 import os
+import Sparkle
 
 @MainActor
 final class MenuBarController {
@@ -13,10 +14,12 @@ final class MenuBarController {
     // MARK: - Properties
 
     private var statusItem: NSStatusItem?
+    private let updaterController: SPUStandardUpdaterController
 
     // MARK: - Init
 
-    init() {
+    init(updaterController: SPUStandardUpdaterController) {
+        self.updaterController = updaterController
         setupStatusItem()
     }
 
@@ -43,6 +46,14 @@ final class MenuBarController {
     private func setupMenu() {
         let menu = NSMenu()
 
+        let checkForUpdatesItem = NSMenuItem(
+            title: Strings.MenuBar.checkForUpdates,
+            action: #selector(checkForUpdates),
+            keyEquivalent: ""
+        )
+        checkForUpdatesItem.target = self
+        menu.addItem(checkForUpdatesItem)
+
         let settingsItem = NSMenuItem(
             title: Strings.MenuBar.settings,
             action: #selector(openSettings),
@@ -65,6 +76,10 @@ final class MenuBarController {
     }
 
     // MARK: - Actions
+
+    @objc private func checkForUpdates() {
+        updaterController.checkForUpdates(nil)
+    }
 
     @objc private func openSettings() {
         Logger.ui.info("Settings requested from menu bar")

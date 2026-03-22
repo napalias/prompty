@@ -8,6 +8,7 @@
 
 import AppKit
 import os
+import Sparkle
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -15,6 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Controllers
 
     private var menuBarController: MenuBarController?
+    private var updaterController: SPUStandardUpdaterController!
 
     // MARK: - State
 
@@ -26,7 +28,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Ensure no Dock icon for this agent app
         NSApp.setActivationPolicy(.accessory)
 
-        menuBarController = MenuBarController()
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+
+        menuBarController = MenuBarController(updaterController: updaterController)
 
         Logger.app.info("Application launched")
     }
