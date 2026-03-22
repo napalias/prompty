@@ -54,6 +54,8 @@ enum Strings {
         static let openSettings = "Open Settings"
         static let checkApiKey = "Check API Key"
         static let copyCommand = "Copy Command"
+        static let ollamaServeCommand = "ollama serve"
+        static let claudeLoginCommand = "claude login"
     }
 
     enum PromptPicker {
@@ -126,6 +128,9 @@ enum Strings {
         static let testing = "Testing..."
         static let customBaseURL = "Base URL"
         static let quickFill = "Quick-fill:"
+        static let quickFillOpenAI = "OpenAI"
+        static let quickFillGroq = "Groq"
+        static let quickFillLMStudio = "LM Studio"
         static let addPrompt = "New Prompt"
         static let editPrompt = "Edit"
         static let deletePrompt = "Delete"

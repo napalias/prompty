@@ -138,14 +138,14 @@ struct ErrorView: View {
 
     private var ollamaHintView: some View {
         VStack(spacing: 8) {
-            Text("ollama serve")
+            Text(Strings.Errors.ollamaServeCommand)
                 .font(.system(.body, design: .monospaced))
                 .padding(8)
                 .background(Color.secondary.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 6))
 
             Button(Strings.Errors.copyCommand) {
-                copyToClipboard("ollama serve")
+                copyToClipboard(Strings.Errors.ollamaServeCommand)
             }
             .buttonStyle(.bordered)
         }
@@ -170,14 +170,14 @@ struct ErrorView: View {
 
     private var oauthReauthView: some View {
         VStack(spacing: 8) {
-            Text("claude login")
+            Text(Strings.Errors.claudeLoginCommand)
                 .font(.system(.body, design: .monospaced))
                 .padding(8)
                 .background(Color.secondary.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 6))
 
             Button(Strings.Errors.copyCommand) {
-                copyToClipboard("claude login")
+                copyToClipboard(Strings.Errors.claudeLoginCommand)
             }
             .buttonStyle(.bordered)
         }

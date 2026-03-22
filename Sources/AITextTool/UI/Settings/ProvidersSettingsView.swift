@@ -20,6 +20,9 @@ private enum KeychainKeys {
 struct ProvidersSettingsView: View {
     let settingsRepo: SettingsRepositoryProtocol
     let keychainService: KeychainServiceProtocol
+    var connectionTester: @Sendable (URL) async throws -> (Data, URLResponse) = {
+        try await URLSession.shared.data(from: $0)
+    }
 
     @State private var activeProviderID: String = "anthropic-api"
     @State private var anthropicKey: String = ""
@@ -137,17 +140,17 @@ struct ProvidersSettingsView: View {
             Text(Strings.Settings.quickFill)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Button("OpenAI") {
+            Button(Strings.Settings.quickFillOpenAI) {
                 openaiBaseURL = "https://api.openai.com/v1"
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
-            Button("Groq") {
+            Button(Strings.Settings.quickFillGroq) {
                 openaiBaseURL = "https://api.groq.com/openai/v1"
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
-            Button("LM Studio") {
+            Button(Strings.Settings.quickFillLMStudio) {
                 openaiBaseURL = "http://localhost:1234/v1"
             }
             .buttonStyle(.bordered)
@@ -274,9 +277,10 @@ struct ProvidersSettingsView: View {
             connectionStatus = .failed
             return
         }
+        let tester = connectionTester
         Task {
             do {
-                let (_, response) = try await URLSession.shared.data(from: url)
+                let (_, response) = try await tester(url)
                 if let httpResponse = response as? HTTPURLResponse,
                    httpResponse.statusCode == 200
                 {
