@@ -58,6 +58,15 @@ enum Strings {
         static let noLogsMessage = "No log files yet"
     }
 
+    enum Diff {
+        static let original = "Original"
+        static let revised = "Revised"
+    }
+
+    enum EditBeforeReplace {
+        static let title = "Edit before replacing"
+    }
+
     enum MenuBar {
         static let checkForUpdates = "Check for Updates..."
         static let settings = "Settings..."
