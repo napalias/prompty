@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build-release:
+    name: Build Release DMG
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -scheme AITextTool \
+            -destination 'generic/platform=macOS' \
+            -archivePath AITextTool.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Export app
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath AITextTool.xcarchive \
+            -exportPath Export/ \
+            -exportOptionsPlist ExportOptions.plist
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname AITextTool \
+            -srcfolder Export/AITextTool.app \
+            -ov -format UDZO \
+            AITextTool-${{ github.ref_name }}.dmg
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AITextTool-${{ github.ref_name }}.dmg
+          generate_release_notes: true
