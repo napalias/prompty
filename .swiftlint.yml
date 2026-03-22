@@ -1,8 +1,8 @@
 included:
-  - Sources/AITextTool
+  - Sources/Prompty
 excluded:
-  - Sources/AITextTool/Sidecar
-  - Tests/AITextToolTests/Mocks
+  - Sources/Prompty/Sidecar
+  - Tests/PromptyTests/Mocks
 
 opt_in_rules:
   - force_unwrapping

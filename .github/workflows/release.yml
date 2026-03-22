@@ -15,28 +15,28 @@ jobs:
       - name: Archive
         run: |
           xcodebuild archive \
-            -scheme AITextTool \
+            -scheme Prompty \
             -destination 'generic/platform=macOS' \
-            -archivePath AITextTool.xcarchive \
+            -archivePath Prompty.xcarchive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
 
       - name: Export app
         run: |
           xcodebuild -exportArchive \
-            -archivePath AITextTool.xcarchive \
+            -archivePath Prompty.xcarchive \
             -exportPath Export/ \
             -exportOptionsPlist ExportOptions.plist
 
       - name: Create DMG
         run: |
-          hdiutil create -volname AITextTool \
-            -srcfolder Export/AITextTool.app \
+          hdiutil create -volname Prompty \
+            -srcfolder Export/Prompty.app \
             -ov -format UDZO \
-            AITextTool-${{ github.ref_name }}.dmg
+            Prompty-${{ github.ref_name }}.dmg
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: AITextTool-${{ github.ref_name }}.dmg
+          files: Prompty-${{ github.ref_name }}.dmg
           generate_release_notes: true

@@ -33,7 +33,7 @@ jobs:
           restore-keys: ${{ runner.os }}-spm-
 
       - name: Resolve packages
-        run: xcodebuild -resolvePackageDependencies -scheme AITextTool
+        run: xcodebuild -resolvePackageDependencies -scheme Prompty
 
       - name: Lint
         run: |
@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: |
           xcodebuild build \
-            -scheme AITextTool \
+            -scheme Prompty \
             -destination 'platform=macOS' \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
@@ -52,7 +52,7 @@ jobs:
       - name: Test
         run: |
           xcodebuild test \
-            -scheme AITextTool \
+            -scheme Prompty \
             -destination 'platform=macOS' \
             -enableCodeCoverage YES \
             -resultBundlePath TestResults.xcresult \
