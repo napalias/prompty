@@ -157,6 +157,12 @@ enum Strings {
         static let quit = "Quit AITextTool"
         static let hotkeyHint = "Hotkey: Option+Space"
     }
+
+    enum History {
+        static let noHistory = "No recent sessions"
+        static let showAll = "Show All History..."
+        static let clearHistory = "Clear History..."
+    }
 }
 
 // swiftlint:enable type_body_length

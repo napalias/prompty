@@ -42,10 +42,17 @@ final class AppState {
     var currentSession: ConversationSession?
     var followUpInput: String = ""
 
+    // MARK: - Dependencies
+
+    private let sessionRepo: SessionHistoryRepositoryProtocol?
+
     // MARK: - Init
 
-    /// Empty init with no side effects, safe for previews.
-    init() {}
+    /// Init with optional session repository for dependency injection.
+    /// Pass nil (default) for previews; pass a real or mock repo for production/tests.
+    init(sessionRepo: SessionHistoryRepositoryProtocol? = nil) {
+        self.sessionRepo = sessionRepo
+    }
 
     // MARK: - Mutations
 
@@ -63,6 +70,39 @@ final class AppState {
     /// Appends a message to the conversation history for multi-turn chat.
     func appendToConversation(message: AIMessage) {
         conversationHistory.append(message)
+    }
+
+    // MARK: - Session Lifecycle
+
+    /// Creates a new conversation session when the hotkey fires on captured text.
+    func startSession(capturedText: String, prompt: Prompt, providerID: String) {
+        currentSession = ConversationSession(
+            id: UUID(),
+            createdAt: Date(),
+            updatedAt: Date(),
+            originalText: capturedText,
+            providerID: providerID,
+            promptTitle: prompt.title,
+            messages: [],
+            finalResult: nil
+        )
+    }
+
+    /// Appends a message to the current session and updates metadata.
+    func appendToSession(message: AIMessage) {
+        currentSession?.messages.append(message)
+        currentSession?.updatedAt = Date()
+        if message.role == .assistant {
+            currentSession?.finalResult = message.content
+        }
+    }
+
+    /// Saves the current session to the repository and clears session state.
+    func endSession() {
+        guard let session = currentSession else { return }
+        try? sessionRepo?.save(session)
+        currentSession = nil
+        conversationHistory = []
     }
 
     /// Clears conversation history and returns panel to promptPicker mode.

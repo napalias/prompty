@@ -9,17 +9,23 @@ import os
 import Sparkle
 
 @MainActor
-final class MenuBarController {
+final class MenuBarController: NSObject {
 
     // MARK: - Properties
 
     private var statusItem: NSStatusItem?
+    private let sessionRepo: SessionHistoryRepositoryProtocol
     private let updaterController: SPUStandardUpdaterController
 
     // MARK: - Init
 
-    init(updaterController: SPUStandardUpdaterController) {
+    init(
+        updaterController: SPUStandardUpdaterController,
+        sessionRepo: SessionHistoryRepositoryProtocol = SessionHistoryRepository()
+    ) {
         self.updaterController = updaterController
+        self.sessionRepo = sessionRepo
+        super.init()
         setupStatusItem()
     }
 
@@ -45,6 +51,15 @@ final class MenuBarController {
 
     private func setupMenu() {
         let menu = NSMenu()
+        menu.delegate = self
+
+        let settingsItem = NSMenuItem(
+            title: Strings.MenuBar.settings,
+            action: #selector(openSettings),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        menu.addItem(settingsItem)
 
         let checkForUpdatesItem = NSMenuItem(
             title: Strings.MenuBar.checkForUpdates,
@@ -54,13 +69,16 @@ final class MenuBarController {
         checkForUpdatesItem.target = self
         menu.addItem(checkForUpdatesItem)
 
-        let settingsItem = NSMenuItem(
-            title: Strings.MenuBar.settings,
-            action: #selector(openSettings),
-            keyEquivalent: ","
+        menu.addItem(NSMenuItem.separator())
+
+        let historyItem = NSMenuItem(
+            title: Strings.MenuBar.history,
+            action: nil,
+            keyEquivalent: ""
         )
-        settingsItem.target = self
-        menu.addItem(settingsItem)
+        historyItem.submenu = buildHistorySubmenu()
+        historyItem.tag = MenuItemTag.history.rawValue
+        menu.addItem(historyItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -75,11 +93,52 @@ final class MenuBarController {
         statusItem?.menu = menu
     }
 
-    // MARK: - Actions
+    private func buildHistorySubmenu() -> NSMenu {
+        let submenu = NSMenu(title: Strings.MenuBar.history)
+        let sessions = Array(sessionRepo.all().prefix(5))
 
-    @objc private func checkForUpdates() {
-        updaterController.checkForUpdates(nil)
+        if sessions.isEmpty {
+            let emptyItem = NSMenuItem(
+                title: Strings.History.noHistory,
+                action: nil,
+                keyEquivalent: ""
+            )
+            emptyItem.isEnabled = false
+            submenu.addItem(emptyItem)
+        } else {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            dateFormatter.timeStyle = .none
+
+            for session in sessions {
+                let title = "\(session.promptTitle) on '\(session.summary)'"
+                let truncatedTitle = title.count > 60
+                    ? String(title.prefix(57)) + "..."
+                    : title
+                let item = NSMenuItem(
+                    title: truncatedTitle,
+                    action: nil,
+                    keyEquivalent: ""
+                )
+                item.toolTip = dateFormatter.string(from: session.createdAt)
+                submenu.addItem(item)
+            }
+
+            submenu.addItem(NSMenuItem.separator())
+
+            let clearItem = NSMenuItem(
+                title: Strings.History.clearHistory,
+                action: #selector(clearHistory),
+                keyEquivalent: ""
+            )
+            clearItem.target = self
+            submenu.addItem(clearItem)
+        }
+
+        return submenu
     }
+
+    // MARK: - Actions
 
     @objc private func openSettings() {
         Logger.ui.info("Settings requested from menu bar")
@@ -90,8 +149,33 @@ final class MenuBarController {
         )
     }
 
+    @objc private func clearHistory() {
+        Logger.history.info("Clear history requested from menu bar")
+        try? sessionRepo.deleteAll()
+    }
+
+    @objc private func checkForUpdates() {
+        updaterController.checkForUpdates(nil)
+    }
+
     @objc private func quitApp() {
         Logger.app.info("Quit requested from menu bar")
         NSApp.terminate(nil)
+    }
+}
+
+// MARK: - Menu Item Tags
+
+private enum MenuItemTag: Int {
+    case history = 100
+}
+
+// MARK: - NSMenuDelegate
+
+extension MenuBarController: NSMenuDelegate {
+    func menuWillOpen(_ menu: NSMenu) {
+        if let historyItem = menu.item(withTag: MenuItemTag.history.rawValue) {
+            historyItem.submenu = buildHistorySubmenu()
+        }
     }
 }
