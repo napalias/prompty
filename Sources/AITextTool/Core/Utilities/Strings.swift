@@ -175,6 +175,28 @@ enum Strings {
         static let showAll = "Show All History..."
         static let clearHistory = "Clear History..."
     }
+
+    enum Onboarding {
+        static let welcomeTitle = "Welcome to AITextTool"
+        static let welcomeSubtitle = "Select text anywhere, press a hotkey, get AI results instantly."
+        static let accessibilityTitle = "Accessibility Access"
+        static let accessibilityDescription = "AITextTool needs Accessibility access to read selected text from other apps."
+        static let inputMonitoringTitle = "Input Monitoring"
+        static let inputMonitoringDescription = "AITextTool needs Input Monitoring access to detect your global hotkey."
+        static let statusGranted = "Granted"
+        static let statusNotGranted = "Not granted"
+        static let openSystemSettings = "Open System Settings"
+        static let skip = "Skip — I'll do later"
+        static let continueButton = "Continue"
+        static let readyTitle = "You're ready!"
+        static let readyDescription = "Press Option+Space on any selected text to get started. You can change the hotkey in Settings."
+        static let getStarted = "Get Started"
+    }
+
+    enum SingleInstance {
+        static let alreadyRunning = "AITextTool is already running"
+        static let findInMenuBar = "Find it in your menu bar."
+    }
 }
 
 // swiftlint:enable type_body_length
