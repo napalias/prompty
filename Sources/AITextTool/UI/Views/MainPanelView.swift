@@ -54,7 +54,12 @@ struct MainPanelView: View {
                 onCancel: handleEditCancel
             )
         case .error:
-            ErrorView()
+            ErrorView(
+                error: state.streamingError ?? .streamInterrupted,
+                onRetry: handleRetry,
+                onOpenSettings: nil,
+                onDismiss: handleDismiss
+            )
         case .noProviderConfigured:
             noProviderView
         case .promptEditor:
@@ -145,5 +150,10 @@ struct MainPanelView: View {
 
     private func handleEditCancel() {
         state.panelMode = .streaming
+    }
+
+    private func handleRetry() {
+        state.streamingError = nil
+        state.panelMode = .promptPicker
     }
 }
