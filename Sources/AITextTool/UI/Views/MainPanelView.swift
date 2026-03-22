@@ -1,14 +1,15 @@
 // MainPanelView.swift
 // AITextTool
 //
-// Root view that routes to sub-views based on AppState.panelMode.
-// Handles all keyboard events for result actions:
+// Root SwiftUI view inside the floating panel.
+// Routes to sub-views based on AppState.panelMode (21K definitive enum).
+// Handles keyboard events for result actions:
 //   Enter -> replace, Cmd+Enter -> copy, D -> diff, E -> edit, Escape -> dismiss.
 
 import SwiftUI
 
 struct MainPanelView: View {
-    @Environment(AppState.self) var state
+    @Environment(AppState.self) private var state
     var textReplaceService: TextReplaceServiceProtocol?
     var onDismiss: (() -> Void)?
 
@@ -18,12 +19,13 @@ struct MainPanelView: View {
                 .fill(.regularMaterial)
 
             panelContent
+                .padding(12)
         }
-        .frame(width: 480)
+        .frame(width: PanelSizeConstraints.width)
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    // MARK: - Panel Content
+    // MARK: - Content Router
 
     @ViewBuilder
     private var panelContent: some View {
@@ -50,10 +52,44 @@ struct MainPanelView: View {
         case .error:
             ErrorView()
         case .noProviderConfigured:
-            ErrorView()
+            noProviderView
         case .promptEditor:
-            ErrorView()
+            // Prompt editor is handled by a separate task
+            Text(Strings.Panel.thinking)
         }
+    }
+
+    // MARK: - No Provider Configured (21E)
+
+    private var noProviderView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "gearshape")
+                .font(.largeTitle)
+                .foregroundStyle(.secondary)
+
+            Text(Strings.Errors.providerNotConfigured)
+                .font(.headline)
+
+            Text(Strings.Panel.noProviderDetail)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            HStack(spacing: 12) {
+                Button(Strings.ActionBar.dismiss) {
+                    state.panelMode = .promptPicker
+                }
+                Button(Strings.MenuBar.settings) {
+                    NSApp.sendAction(
+                        Selector(("showSettingsWindow:")),
+                        to: nil,
+                        from: nil
+                    )
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding()
     }
 
     // MARK: - Key Actions

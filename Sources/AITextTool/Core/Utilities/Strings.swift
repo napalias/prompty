@@ -13,6 +13,13 @@ enum Strings {
         static let copied = "Copied to clipboard"
         static let retrying = "Retrying..."
         static let stopStreaming = "Stop"
+        static let searchPrompts = "Search prompts..."
+        static let noPromptsMatch = "No prompts match your search"
+        static let customPrompt = "Custom Prompt"
+        static let send = "Send"
+        static let back = "Back"
+        static let noProviderDetail = "Add an API key or connect Claude in Settings to start using AITextTool."
+        static let customPromptInputLabel = "Custom prompt input"
     }
 
     enum ActionBar {
