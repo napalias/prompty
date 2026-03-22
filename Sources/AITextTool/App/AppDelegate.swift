@@ -28,6 +28,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Ensure no Dock icon for this agent app
         NSApp.setActivationPolicy(.accessory)
 
+        // Initialize crash reporter (local only, no telemetry per 17B)
+        _ = CrashReporter.shared
+
         updaterController = SPUStandardUpdaterController(
             startingUpdater: true,
             updaterDelegate: nil,

@@ -1,7 +1,7 @@
 // SettingsView.swift
 // AITextTool
 //
-// Tab container for settings with 3 tabs: General, Providers, Prompts.
+// Tab container for settings with 4 tabs: General, Providers, Prompts, Logs.
 // Keyboard shortcut Cmd+, opens this view (20Q).
 
 import SwiftUI
@@ -40,6 +40,12 @@ struct SettingsView: View {
                     )
                 }
                 .tag(SettingsTab.prompts)
+
+            LogsSettingsView(crashReporter: .shared)
+                .tabItem {
+                    Label(Strings.Logs.logs, systemImage: "doc.text")
+                }
+                .tag(SettingsTab.logs)
         }
         .frame(minWidth: 500, minHeight: 400)
         .padding()
@@ -52,6 +58,7 @@ enum SettingsTab: Hashable {
     case general
     case providers
     case prompts
+    case logs
 }
 
 // MARK: - Preview

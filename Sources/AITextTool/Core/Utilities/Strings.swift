@@ -150,6 +150,18 @@ enum Strings {
         static let pasteMode = "Paste format"
     }
 
+    enum Logs {
+        static let title = "Log Files"
+        static let privacyNote = "Logs are stored locally on this device and are never sent anywhere."
+        static let openFolder = "Open Logs Folder"
+        static let deleteAll = "Delete All"
+        static let deleteConfirmTitle = "Delete all log files?"
+        static let deleteConfirmMessage = "This action cannot be undone. All crash reports and error logs will be permanently deleted."
+        static let cancel = "Cancel"
+        static let openInConsole = "Open in Console"
+        static let logs = "Logs"
+    }
+
     enum MenuBar {
         static let checkForUpdates = "Check for Updates..."
         static let settings = "Settings..."
