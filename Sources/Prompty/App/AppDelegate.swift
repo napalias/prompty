@@ -192,9 +192,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             contentRect: NSRect(x: 0, y: 0, width: 520, height: 460),
             styleMask: [.titled, .closable],
             backing: .buffered,
-            defer: fal rderFront(nil)
+            defer: false
+        )
+        window.title = Strings.Onboarding.welcomeTitle
+        window.contentView = NSHostingView(rootView: onboardingView)
+        window.center()
+        window.isReleasedWhenClosed = false
+        window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         onboardingWindow = window
-    }
+    } 
 }
- 
