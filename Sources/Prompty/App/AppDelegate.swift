@@ -8,7 +8,6 @@
 
 import AppKit
 import os
-import Sparkle
 import SwiftUI
 
 @MainActor
@@ -17,12 +16,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Controllers
 
     private var menuBarController: MenuBarController?
-    private var updaterController: SPUStandardUpdaterController!
+    private var panelController: FloatingPanelController?
 
     // MARK: - Services
 
     private let hotkeyManager: HotkeyManagerProtocol
     private let instanceChecker: SingleInstanceCheckerProtocol
+    private let textCapture: TextCaptureService
+    private let settingsRepo: SettingsRepository
 
     // MARK: - State
 
@@ -47,6 +48,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     ) {
         self.hotkeyManager = hotkeyManager
         self.instanceChecker = instanceChecker
+        self.textCapture = TextCaptureService()
+        self.settingsRepo = SettingsRepository()
         super.init()
     }
 
@@ -64,7 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        NSApp.setActivationPolicy(.accessory)
+        NSApp.setActivationPolicy(.regular)
 
         // Initialize crash reporter (local only, no telemetry per 17B)
         _ = CrashReporter.shared
@@ -77,13 +80,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
 
-        updaterController = SPUStandardUpdaterController(
-            startingUpdater: true,
-            updaterDelegate: nil,
-            userDriverDelegate: nil
-        )
+        menuBarController = MenuBarController()
 
-        menuBarController = MenuBarController(updaterController: updaterController)
+        // Register the global hotkey
+        registerHotkey()
 
         // Show onboarding on first launch (18D)
         if !OnboardingViewModel.hasCompletedOnboarding {
@@ -100,6 +100,75 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             appState.cancelStreaming()
         }
         return .terminateNow
+    }
+
+    // MARK: - Hotkey Registration
+
+    private func registerHotkey() {
+        let settings = settingsRepo.settings
+        let hotkey = settings.hotkey
+
+        hotkeyManager.onHotkeyFired = { [weak self] in
+            Task { @MainActor in
+                self?.handleHotkeyFired()
+            }
+        }
+
+        do {
+            try hotkeyManager.register(
+                keyCode: CGKeyCode(hotkey.keyCode),
+                modifiers: CGEventFlags(rawValue: hotkey.modifiers)
+            )
+            Logger.hotkey.info("Hotkey registered: keyCode=\(hotkey.keyCode)")
+        } catch {
+            Logger.hotkey.error("Failed to register hotkey: \(error.localizedDescription)")
+            // Show alert about Input Monitoring permission
+            let alert = NSAlert()
+            alert.messageText = Strings.Errors.inputMonitoringPermissionDenied
+            alert.informativeText = "Go to System Settings → Privacy & Security → Input Monitoring and enable Prompty."
+            alert.addButton(withTitle: Strings.Errors.openSystemSettings)
+            alert.addButton(withTitle: "OK")
+            if alert.runModal() == .alertFirstButtonReturn {
+                NSWorkspace.shared.open(
+                    URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")!
+                )
+            }
+        }
+    }
+
+    private func handleHotkeyFired() {
+        Logger.hotkey.info("Hotkey fired — capturing text")
+
+        Task { @MainActor in
+            do {
+                let text = try await textCapture.capture()
+                appState.reset(capturedText: text)
+                appState.panelMode = .promptPicker
+                appState.isVisible = true
+
+                // Show the floating panel
+                let cursorPoint = NSEvent.mouseLocation
+                if panelController == nil {
+                    panelController = FloatingPanelController(
+                        textCapture: textCapture,
+                        aiManager: AIProviderManager(),
+                        promptRepo: PromptRepository(),
+                        state: appState
+                    )
+                }
+                panelController?.show(near: cursorPoint)
+
+                Logger.hotkey.info("Text captured (\(text.count) chars), panel shown")
+            } catch let error as AppError {
+                Logger.hotkey.error("Text capture failed: \(error.localizedDescription)")
+                if error == .noTextSelected {
+                    // Show toast
+                    Logger.hotkey.info("No text selected — showing toast")
+                }
+            } catch {
+                Logger.hotkey.error("Unexpected error: \(error.localizedDescription)")
+            }
+        }
     }
 
     // MARK: - Sleep/Wake (19B)
@@ -123,14 +192,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             contentRect: NSRect(x: 0, y: 0, width: 520, height: 460),
             styleMask: [.titled, .closable],
             backing: .buffered,
-            defer: false
-        )
-        window.title = Strings.Onboarding.welcomeTitle
-        window.contentView = NSHostingView(rootView: onboardingView)
-        window.center()
-        window.isReleasedWhenClosed = false
-        window.makeKeyAndOrderFront(nil)
+            defer: fal rderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         onboardingWindow = window
     }
 }
+ 

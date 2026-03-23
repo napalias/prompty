@@ -6,7 +6,6 @@
 
 import AppKit
 import os
-import Sparkle
 
 @MainActor
 final class MenuBarController: NSObject {
@@ -15,15 +14,12 @@ final class MenuBarController: NSObject {
 
     private var statusItem: NSStatusItem?
     private let sessionRepo: SessionHistoryRepositoryProtocol
-    private let updaterController: SPUStandardUpdaterController
 
     // MARK: - Init
 
     init(
-        updaterController: SPUStandardUpdaterController,
         sessionRepo: SessionHistoryRepositoryProtocol = SessionHistoryRepository()
     ) {
-        self.updaterController = updaterController
         self.sessionRepo = sessionRepo
         super.init()
         setupStatusItem()
@@ -60,14 +56,6 @@ final class MenuBarController: NSObject {
         )
         settingsItem.target = self
         menu.addItem(settingsItem)
-
-        let checkForUpdatesItem = NSMenuItem(
-            title: Strings.MenuBar.checkForUpdates,
-            action: #selector(checkForUpdates),
-            keyEquivalent: ""
-        )
-        checkForUpdatesItem.target = self
-        menu.addItem(checkForUpdatesItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -152,10 +140,6 @@ final class MenuBarController: NSObject {
     @objc private func clearHistory() {
         Logger.history.info("Clear history requested from menu bar")
         try? sessionRepo.deleteAll()
-    }
-
-    @objc private func checkForUpdates() {
-        updaterController.checkForUpdates(nil)
     }
 
     @objc private func quitApp() {
