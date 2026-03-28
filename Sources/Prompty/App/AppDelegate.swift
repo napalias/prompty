@@ -90,7 +90,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             showOnboarding()
         }
 
-        Logger.app.info("Application launched")
+        NSLog("[Prompty] Application launched successfully")
     }
 
     func applicationShouldTerminate(
@@ -108,7 +108,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let settings = settingsRepo.settings
         let hotkey = settings.hotkey
 
+        NSLog("[Prompty] Registering hotkey: keyCode=\(hotkey.keyCode) modifiers=\(hotkey.modifiers)")
+
         hotkeyManager.onHotkeyFired = { [weak self] in
+            NSLog("[Prompty] HOTKEY FIRED!")
             Task { @MainActor in
                 self?.handleHotkeyFired()
             }
@@ -119,9 +122,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 keyCode: CGKeyCode(hotkey.keyCode),
                 modifiers: CGEventFlags(rawValue: hotkey.modifiers)
             )
-            Logger.hotkey.info("Hotkey registered: keyCode=\(hotkey.keyCode)")
+            NSLog("[Prompty] Hotkey registered successfully")
         } catch {
-            Logger.hotkey.error("Failed to register hotkey: \(error.localizedDescription)")
+            NSLog("[Prompty] FAILED to register hotkey: \(error.localizedDescription)")
             // Show alert about Input Monitoring permission
             let alert = NSAlert()
             alert.messageText = Strings.Errors.inputMonitoringPermissionDenied
