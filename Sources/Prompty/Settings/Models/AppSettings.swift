@@ -47,12 +47,12 @@ struct AppSettings: Codable, Equatable, Sendable {
 // MARK: - HotkeySetting
 
 /// Persisted hotkey configuration.
-/// Default: Command+L (keyCode 37 = L, modifiers = maskCommand).
+/// Default: Control+Shift+L (keyCode 37 = L, modifiers = maskControl + maskShift).
 struct HotkeySetting: Codable, Equatable, Sendable {
     /// CGKeyCode for the hotkey. 37 = L key.
     var keyCode: UInt16 = 37
-    /// CGEventFlags raw value. 1048576 = maskCommand (Command key).
-    var modifiers: UInt64 = 1_048_576
+    /// CGEventFlags raw value. maskControl (262144) + maskShift (131072) = 393216.
+    var modifiers: UInt64 = 393_216
 }
 
 // MARK: - ProviderConfig
