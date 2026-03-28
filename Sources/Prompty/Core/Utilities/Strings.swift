@@ -98,7 +98,7 @@ enum Strings {
     enum Settings {
         static let apiKeyPlaceholder = "sk-..."
         static let baseURLPlaceholder = "https://api.openai.com/v1"
-        static let hotkeyDefault = "Option+C"
+        static let hotkeyDefault = "Command+L"
         static let noLogsMessage = "No log files yet"
         static let general = "General"
         static let providers = "Providers"
@@ -167,7 +167,7 @@ enum Strings {
         static let settings = "Settings..."
         static let history = "History"
         static let quit = "Quit Prompty"
-        static let hotkeyHint = "Hotkey: Option+C"
+        static let hotkeyHint = "Hotkey: Command+L"
     }
 
     enum History {
@@ -189,7 +189,7 @@ enum Strings {
         static let skip = "Skip — I'll do later"
         static let continueButton = "Continue"
         static let readyTitle = "You're ready!"
-        static let readyDescription = "Press Option+C on any selected text to get started. You can change the hotkey in Settings."
+        static let readyDescription = "Press Command+L on any selected text to get started. You can change the hotkey in Settings."
         static let getStarted = "Get Started"
     }
 
